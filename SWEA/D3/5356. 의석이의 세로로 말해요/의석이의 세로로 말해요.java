@@ -15,6 +15,9 @@ public class Solution {
 					for (int j = 0; j < str.length(); j++) {
 						input[i][j] = str.charAt(j);
 					}
+                    for (int j = str.length(); j < 15; j++) {
+						input[i][j] = '*';
+					}
 				}
 
 				// 세로로 배열을 출력하는데
@@ -22,7 +25,7 @@ public class Solution {
 				String ans = "";
 				for (int i = 0; i < 15; i++) {
 					for (int j = 0; j < 5; j++) {
-						if (input[j][i] != '\u0000')
+						if (input[j][i] != '*')
 							ans += input[j][i];
 					}
 
@@ -31,3 +34,4 @@ public class Solution {
 		}
 	}
 }
+
