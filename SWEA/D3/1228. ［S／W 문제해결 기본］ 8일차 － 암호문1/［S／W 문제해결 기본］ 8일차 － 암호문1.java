@@ -1,15 +1,16 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Scanner;
 
+// LinkedList 자료구조 사용
 public class Solution {
-	public static List<Integer> password;
+	public static LinkedList<Integer> password;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+
 		// 테스트 케이스 10개
 		for (int tc = 1; tc <= 10; tc++) {
-			password = new ArrayList<>();
+			password = new LinkedList<>();
 
 			int N = sc.nextInt(); // 원본 암호문의 길이
 
@@ -43,7 +44,7 @@ public class Solution {
 			System.out.println();
 
 		} // 테케 for문
-
+		
 	} // main
 
 } // Solution
