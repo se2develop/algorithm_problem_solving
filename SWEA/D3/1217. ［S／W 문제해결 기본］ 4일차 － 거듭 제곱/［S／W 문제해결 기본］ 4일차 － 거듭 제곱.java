@@ -32,12 +32,14 @@ public class Solution {
 		} else {
 			// 1) 짝수일 때
 			if (M % 2 == 0) {
-				memories[M] = pow(N, M / 2) * pow(N, M / 2);
+				int tmp = pow(N, M / 2);
+				memories[M] = tmp * tmp;
 				return memories[M];
 			}
-			// 2) 음수일 때
+			// 2) 홀수일 때
 			else {
-				memories[M] = pow(N, (M - 1) / 2) * pow(N, (M - 1) / 2) * N;
+				int tmp = pow(N, (M - 1) / 2);
+				memories[M] = tmp * tmp * N;
 				return memories[M];
 			}
 		}
