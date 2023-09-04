@@ -31,6 +31,10 @@ public class Solution {
 
 	// sum = 중간합
 	public static void powerset(int idx, int sum) {
+        // 내가 가지고 있는 ans보다 크면 탈출!
+		if (sum > ans)
+			return;
+        
 		// 기저 부분
 		if (idx == N) {
 			if (sum >= B)
