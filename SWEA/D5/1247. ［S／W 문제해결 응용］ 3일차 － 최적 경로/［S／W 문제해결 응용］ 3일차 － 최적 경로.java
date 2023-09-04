@@ -46,6 +46,8 @@ public class Solution {
 			for (int i = 1; i < N; i++) {
 				sum += Math.abs(point[0][result[i]] - point[0][result[i - 1]])
 						+ Math.abs(point[1][result[i]] - point[1][result[i - 1]]);
+				if (sum > ans)
+					return;
 			}
 			// (마지막 고객의 좌표 - 집의 좌표)
 			sum += Math.abs(basic[0][1] - point[0][result[N - 1]]) + Math.abs(basic[1][1] - point[1][result[N - 1]]);
@@ -58,6 +60,7 @@ public class Solution {
 		for (int i = 0; i < N; i++) {
 			if (sel[i])
 				continue;
+
 			result[idx] = i;
 			sel[i] = true;
 			perm(idx + 1);
