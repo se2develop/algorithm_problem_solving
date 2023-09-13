@@ -16,15 +16,19 @@ public class Main {
 			num[i] = sc.nextInt();
 		} // 입력받기 끝
 
-		int idx = 0;
-		int order = 1;
+		int idx = 0; // num배열 인덱스
+		int order = 1; // 지금 간식을 받을 수 있는 순서
+
+		// while문 종료조건
 		boolean flag = true;
 
 		outer: while (flag) {
 			// 스택이 비어있거나, 스택의 top이 order이 아니면 들어온 순서대로 push
 			if (stack.isEmpty() || stack.peek() != order) {
+				// idx가 N이 되면 마지막 사람까지 본거니까 탈출
 				if (idx == N)
 					break outer;
+
 				stack.push(num[idx++]);
 			}
 
@@ -34,10 +38,13 @@ public class Main {
 				order++;
 			}
 
+			// order이 N + 1이 되면 결과는 nice일 듯
+			// 다 pop됐으니까 while문 탈출
 			if (order == N + 1)
 				flag = false;
 		}
 
+		// 스택이 비어있으면 Nice, 아니면 Sad
 		if (stack.isEmpty())
 			System.out.println("Nice");
 		else
