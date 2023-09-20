@@ -81,7 +81,7 @@ public class Solution {
 
 	// 환경 부담금 계산
 	public static double cost(int[] a, int[] b) {
-		return E * Math.pow(Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)), 2);
+		return E * (Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 	} // cost
 
 	public static int findset(int x) {
