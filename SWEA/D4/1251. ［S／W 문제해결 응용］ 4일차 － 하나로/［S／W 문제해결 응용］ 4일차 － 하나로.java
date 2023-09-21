@@ -1,101 +1,98 @@
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Solution {
-	public static int N, M, idx;
+	public static class Edge implements Comparable<Edge> {
+		int start, end;
+		double weight;
+
+		public Edge(int start, int end, double weight) {
+			this.start = start;
+			this.end = end;
+			this.weight = weight;
+		}
+
+		// 가중치를 기준으로 정렬해야 되니까 기준 생성
+		public int compareTo(Edge e) {
+			return Double.compare(this.weight, e.weight);
+		}
+	} // Edge
+
+	public static int N, M, pick;
 	public static double E, ans;
 	public static int[][] islands;
-	public static double[][] edges;
-	public static int[] p;
+	public static List<Edge>[] edges;
+	public static boolean[] visited;
+	public static PriorityQueue<Edge> pQueue;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+
 		int T = sc.nextInt(); // 테스트 케이스 개수
 
 		for (int tc = 1; tc <= T; tc++) {
-			N = sc.nextInt(); // 섬의 개수
 
-			// i번째 섬의 x좌표: islands[i][0], i번째 섬의 x좌표: islands[i][1]
-			islands = new int[N][2];
+			N = sc.nextInt(); // 정점의 개수
 
+			islands = new int[N][2]; // 섬의 좌표 받아오기
 			for (int i = 0; i < 2; i++) {
+				M = 0; // 간선의 개수
 				for (int j = 0; j < N; j++) {
+					M += j; // 모든 간선의 개수 계산
 					islands[j][i] = sc.nextInt();
-				}
-			} // 섬 좌표 입력 끝!
-
-			E = sc.nextDouble(); // 환경 부담 세율
-
-			M = 0; // 간선의 개수
-			for (int i = 1; i < N; i++)
-				M += i;
-
-			// 간선배열 [0]:시작 섬의 번호, [1]:끝 섬의 번호, [2]:환경부담금
-			edges = new double[M][3];
-			idx = 0;
-			for (int i = 0; i < N; i++) {
-				for (int j = i + 1; j < N; j++) {
-					edges[idx][0] = i;
-					edges[idx][1] = j;
-					edges[idx++][2] = cost(islands[i], islands[j]);
 				}
 			}
 
-			// 환경부담금 기준 오름차순 정렬
-			Arrays.sort(edges, new Comparator<double[]>() {
-				@Override
-				public int compare(double[] o1, double[] o2) {
-					return Double.compare(o1[2], o2[2]);
+			E = sc.nextDouble(); // 환경 부담 세율
+
+			edges = new ArrayList[N];
+			for (int i = 0; i < N; i++) {
+				edges[i] = new ArrayList<Edge>();
+			}
+
+			for (int i = 0; i < N; i++) {
+				for (int j = i + 1; j < N; j++) {
+					int st = i; // 시작 섬 번호
+					int ed = j; // 끝 섬 번호
+					double w = dist(islands[st], islands[ed]); // 환경 부담금
+
+					edges[st].add(new Edge(st, ed, w));
+					edges[ed].add(new Edge(ed, st, w));
 				}
-			});
+			} // 간선 정보 인접리스트에 저장
 
-//			for (double[] e : edges) {
-//				System.out.println(Arrays.toString(e));
-//			}
+			visited = new boolean[N]; // 섬 방문 정보 배열
+			pQueue = new PriorityQueue<>(); // 우선순위 큐 사용
 
-			p = new int[N + 1]; // 대표자 저장
+			// 0번 섬 부터 시작
+			visited[0] = true;
+			pQueue.addAll(edges[0]);
 
-			for (int i = 1; i < N + 1; i++) {
-				p[i] = i;
-			} // 기본 대표자는 자기로 초기화
+			pick = 1; // 뽑은 간선의 개수
+			ans = 0; // 최소 환경 부담금
 
-			// 최소 비용 신장트리의 간선의 개수 = 정점의 개수 - 1;
-			int cnt = 0; // 뽑은 간선의 수 저장
-			idx = 0; // 간선배열 idx
-			ans = 0; // 최소 환경부담금 저장
-			while (cnt < N - 1) {
-				int x = (int) edges[idx][0];
-				int y = (int) edges[idx][1];
-				// 사이클 생성하지 않기 위해서
-				if (findset(x) != findset(y)) {
-					union(x, y);
-					ans += edges[idx][2];
-					cnt++; // 뽑힌 간선 개수 증가
+			// MST는 간선의 개수 = 정점의 개수 - 1
+			while (pick < N) {
+				Edge e = pQueue.poll();
+
+				// 끝 섬이 아직 방문 안했으면
+				if (!visited[e.end]) {
+					// 간선 선택
+					pick++;
+					// 가중치 더해주고
+					ans += e.weight;
+					pQueue.addAll(edges[e.end]);
+					visited[e.end] = true;
 				}
-				idx++; // 뽑았든 안뽑았든 간선배열 idx 증가
 			}
 			System.out.println("#" + tc + " " + Math.round(ans));
 		} // tc for문
 	} // main
 
-	// 환경 부담금 계산
-	public static double cost(int[] a, int[] b) {
-		return E * (Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
-	} // cost
-
-	public static int findset(int x) {
-		// x가 자기가 속해있는 그룹의 대표가 아니면
-		if (x != p[x])
-			// 대표를 찾아서 p[x]에 저장
-			p[x] = findset(p[x]);
-		return p[x];
-	} // findset
-
-	public static void union(int x, int y) {
-		// y가 속해있는 그룹의 대표를 x가 속해있는 그룹의 대표로 -> 합집합
-		p[findset(y)] = findset(x);
-
-	} // union
-
+	// 환경 부담금 = 환경 부담 세율(E) * (해저터널의 길이(L) ^ 2)
+	public static double dist(int[] stPoint, int[] edPoint) {
+		return E * (Math.pow(stPoint[0] - edPoint[0], 2) + Math.pow(stPoint[1] - edPoint[1], 2));
+	}
 } // class
