@@ -48,76 +48,38 @@ public class Solution {
 		int nc = startC;
 
 		// 시작점 디저트 먹었음!
-		int num = map[startR][startC];
+		int num = map[nr][nc];
 		visited[num] = true;
 
-		for (int i = 0; i < len1; i++) {
-			nr += dr[0];
-			nc += dc[0];
+		int L = 0; // 대각선 길이가 경우마다 다름
+		for (int idx = 0; idx < 4; idx++) {
 
-			// 경계를 벗어나면 -1
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N)
-				return -1;
+			if (idx == 0 || idx == 2)
+				L = len1;
+			else if (idx == 1)
+				L = len2;
+			// 마지막은 출발점까진 안가도 되므로 len2-1
+			else
+				L = len2 - 1;
 
-			// 이미 있는 디저트면 -1
-			if (visited[map[nr][nc]])
-				return -1;
+			for (int i = 0; i < L; i++) {
+				// idx에 따라 시계방향으로 대각선길을 따라감
+				nr += dr[idx];
+				nc += dc[idx];
 
-			// 아니면 디저트 개수 ++, 그 디저트는 이미 먹었음
-			cnt++;
-			visited[map[nr][nc]] = true;
-		}
+				// 경계를 벗어나면 -1
+				if (nr < 0 || nc < 0 || nr >= N || nc >= N)
+					return -1;
 
-		for (int i = 0; i < len2; i++) {
-			nr += dr[1];
-			nc += dc[1];
+				// 이미 있는 디저트면 -1
+				if (visited[map[nr][nc]])
+					return -1;
 
-			// 경계를 벗어나면 -1
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N)
-				return -1;
+				// 아니면 디저트 개수 ++, 그 디저트는 이미 먹었음
+				cnt++;
+				visited[map[nr][nc]] = true;
+			}
 
-			// 이미 있는 디저트면 -1
-			if (visited[map[nr][nc]])
-				return -1;
-
-			// 아니면 디저트 개수 ++, 그 디저트는 이미 먹었음
-			cnt++;
-			visited[map[nr][nc]] = true;
-		}
-
-		for (int i = 0; i < len1; i++) {
-			nr += dr[2];
-			nc += dc[2];
-
-			// 경계를 벗어나면 -1
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N)
-				return -1;
-
-			// 이미 있는 디저트면 -1
-			if (visited[map[nr][nc]])
-				return -1;
-
-			// 아니면 디저트 개수 ++, 그 디저트는 이미 먹었음
-			cnt++;
-			visited[map[nr][nc]] = true;
-		}
-
-		// 마지막엔 시작점까지 돌아가진 않아도 되니까 len2 - 1번 반복
-		for (int i = 0; i < len2 - 1; i++) {
-			nr += dr[3];
-			nc += dc[3];
-
-			// 경계를 벗어나면 -1
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N)
-				return -1;
-
-			// 이미 있는 디저트면 -1
-			if (visited[map[nr][nc]])
-				return -1;
-
-			// 아니면 디저트 개수 ++, 그 디저트는 이미 먹었음
-			cnt++;
-			visited[map[nr][nc]] = true;
 		}
 
 		return cnt; // 여기까지 오면 가능한 경우임!
