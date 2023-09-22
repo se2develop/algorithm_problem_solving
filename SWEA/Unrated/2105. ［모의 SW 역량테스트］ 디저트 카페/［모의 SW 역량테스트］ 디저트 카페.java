@@ -28,8 +28,8 @@ public class Solution {
 			ans = -1; // 디저트 개수 -> 먹을 수 없으면 -1 출력
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
-					for (int k = 1; k < N; k++) {
-						for (int l = 1; l < N; l++) {
+					for (int k = 1; k < N - 1; k++) {
+						for (int l = 1; l < N - 1; l++) {
 							// 가장 많은 디저트의 개수 저장
 							ans = Math.max(ans, snack(i, j, k, l));
 						} // 대각선 길이 2
